@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding='UTF-8' standalone='yes' ?>
+<?xml-stylesheet type="text/xsl" href="result.xsl"?>
+<TestRun>
+  <FailedTests>
+    <FailedTest id="1">
+      <Name>counterarraytest::test01</Name>
+      <FailureType>Assertion</FailureType>
+      <Location>
+        <File>counterarraytest.cpp</File>
+        <Line>40</Line>
+      </Location>
+      <Message>assertion failed
+- Expression: r == temp
+</Message>
+    </FailedTest>
+    <FailedTest id="2">
+      <Name>counterarraytest::test02</Name>
+      <FailureType>Assertion</FailureType>
+      <Location>
+        <File>counterarraytest.cpp</File>
+        <Line>48</Line>
+      </Location>
+      <Message>assertion failed
+- Expression: r == temp
+</Message>
+    </FailedTest>
+  </FailedTests>
+  <SuccessfulTests></SuccessfulTests>
+  <Statistics>
+    <Tests>2</Tests>
+    <FailuresTotal>2</FailuresTotal>
+    <Errors>0</Errors>
+    <Failures>2</Failures>
+  </Statistics>
+</TestRun>

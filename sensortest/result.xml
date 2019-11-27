@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8' standalone='yes' ?>
+<?xml-stylesheet type="text/xsl" href="result.xsl"?>
+<TestRun>
+  <FailedTests></FailedTests>
+  <SuccessfulTests>
+    <Test id="1">
+      <Name>readSensorValuetest::test01</Name>
+    </Test>
+    <Test id="2">
+      <Name>readSensorValuetest::test02</Name>
+    </Test>
+    <Test id="3">
+      <Name>readSensorValuetest::test03</Name>
+    </Test>
+    <Test id="4">
+      <Name>readSensorValuetest::test04</Name>
+    </Test>
+  </SuccessfulTests>
+  <Statistics>
+    <Tests>4</Tests>
+    <FailuresTotal>0</FailuresTotal>
+    <Errors>0</Errors>
+    <Failures>0</Failures>
+  </Statistics>
+</TestRun>
