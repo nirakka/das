@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding='UTF-8' standalone='yes' ?>
 <?xml-stylesheet type="text/xsl" href="result.xsl"?>
 <TestRun>
-  <FailedTests></FailedTests>
-  <SuccessfulTests>
-    <Test id="1">
-      <Name>countertest::test01</Name>
-    </Test>
-    <Test id="2">
-      <Name>countertest::test02</Name>
-    </Test>
-    <Test id="3">
-      <Name>countertest::test03</Name>
-    </Test>
-  </SuccessfulTests>
+  <FailedTests>
+    <FailedTest id="1">
+      <Name>counterarraytest::test01</Name>
+      <FailureType>Assertion</FailureType>
+      <Location>
+        <File>counterarraytest.cpp</File>
+        <Line>39</Line>
+      </Location>
+      <Message>equality assertion failed
+- Expected: 0
+- Actual  : 1
+</Message>
+    </FailedTest>
+    <FailedTest id="2">
+      <Name>counterarraytest::test02</Name>
+      <FailureType>Assertion</FailureType>
+      <Location>
+        <File>counterarraytest.cpp</File>
+        <Line>47</Line>
+      </Location>
+      <Message>equality assertion failed
+- Expected: 0
+- Actual  : 2
+</Message>
+    </FailedTest>
+  </FailedTests>
+  <SuccessfulTests></SuccessfulTests>
   <Statistics>
-    <Tests>3</Tests>
-    <FailuresTotal>0</FailuresTotal>
+    <Tests>2</Tests>
+    <FailuresTotal>2</FailuresTotal>
     <Errors>0</Errors>
-    <Failures>0</Failures>
+    <Failures>2</Failures>
   </Statistics>
 </TestRun>
