@@ -1,4 +1,4 @@
-ï»¿#include <iostream>
+#include <iostream>
 #include <sstream>
 
 #include "checkwarn.h"
@@ -8,7 +8,7 @@ inline int checkArg(bool f, int r)
 	return (f) ? r : 0;
 }
 
-// ä½¿ã„æ–¹
+// g‚¢•û
 // errno = checkwarn(...);
 // result = writeWarn(errno,...);
 int checkwarn(const Warn& inwarn, const RawValue& invalue)
@@ -28,7 +28,7 @@ int checkwarn(const Warn& inwarn, const RawValue& invalue)
 
 std::string messages[] = {"a","b","c"};
 
-// ä½¿ã„æ–¹
+// g‚¢•û
 //
 int writeWarn(int errno, const RawValue& invalue, WarnValueArray& outvaluearray)
 {
@@ -41,7 +41,7 @@ int writeWarn(int errno, const RawValue& invalue, WarnValueArray& outvaluearray)
 		//outvalue.message = str;
 		//(int sn,int sv,int an,int av)
 	} else {
-//		outvalueã‚’ç”Ÿæˆ
+//		outvalue‚ğ¶¬
 		//cout << "" << endl;
 	}
 	return 0;

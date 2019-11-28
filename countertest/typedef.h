@@ -1,8 +1,7 @@
-ï»¿#pragma once
+#pragma once
 #include <iomanip>
 
 #include <cstring>
-#include <string>
 #include <inttypes.h>
 
 #include <fstream>
@@ -23,7 +22,7 @@ public:
   Date(uint8_t y, uint8_t m, uint8_t d) {
     val.b[3] = y; val.b[2] = m; val.b[1] = d; val.b[0] = 0;
   }
-  Date() { val.l = 0;}
+  Date() { val.l = 0x63636363; } // (99,99,99,99)
   friend bool operator==(Date& d1,Date&d2) { return d1.val.l == d2.val.l; }
   friend bool operator<(Date& d1,Date&d2) { return d1.val.l < d2.val.l; }
   friend bool operator>(Date& d1,Date&d2) { return d1.val.l > d2.val.l; }
@@ -60,7 +59,7 @@ public:
   Time(uint8_t h, uint8_t m, uint8_t s) {
     val.b[3] = h; val.b[2] = m; val.b[1] = s; val.b[0] = 0;	
   }
-  Time() { val.l = 0;}
+  Time() { val.l = 0x63636363 ;} // (99,99,99,99)
   friend bool operator==(Time& t1,Time&t2)  { return t1.val.l == t2.val.l; }
   friend bool operator<(Time& t1,Time&t2) { return t1.val.l < t2.val.l; }
   friend bool operator>(Time& t1,Time&t2) { return t1.val.l > t2.val.l; }
@@ -108,7 +107,7 @@ public:
   }
 };
 
-// ã‚»ãƒ³ã‚µç•ªå·
+// ƒZƒ“ƒT”Ô†
 #define X(n) (0x0000|(n))
 #define Y(n) (0x4000|(n))
 #define A(n) (0x8000|(n))
@@ -147,7 +146,6 @@ inline int min(int x,int y) { return (x>y)?y:x; }
 template<class Elem>
 class Array {
   int size;
-//  int count;
   Elem *value;
 public:
   Array(int sz):size(sz) { value = new Elem[sz]; }
@@ -170,11 +168,12 @@ public:
 	  return true;
   }
   friend bool operator!=(Array& a1,Array &a2) { return !(a1==a2); }
-  std::string str() {
+  std::string str(bool nl=false) {
 	std::stringstream ss;
 	ss << "[" ;
 	for (int i=0;i<size;i++) {
 		if (i>0) ss<<",";
+		if (nl) ss << std::endl;
 		ss << value[i].str();
 	}
 	ss << "]";
@@ -182,17 +181,55 @@ public:
   }  
 };
 
-// ã‚»ãƒ³ã‚µå€¤
+#define NSENSOR 4
+
+class Values {
+  int16_t val[NSENSOR];
+public:
+  void setval(int i, int16_t v) {val[i] = v;}
+  int16_t getval(int i) const { return val[i]; }
+  friend bool operator==(Values& x1, Values& x2) {
+	  for (int i=0;i<NSENSOR;i++)
+		if (x1.getval(i) != x2.getval(i)) return false;  
+	  return true;
+  }
+  friend bool operator!=(Values& x1, Values& x2) { return !(x1==x2); }
+  int16_t& operator[](int i) { return val[i]; }
+
+  Values(int16_t v=0) {
+	  for (int i=0;i<NSENSOR;i++) {
+		  setval(i,v);
+	  }
+  }
+  Values(std::initializer_list<int16_t> list) {
+	  int i=0;
+	  for (auto iter = list.begin() ; iter != list.end() ; ++iter ) {
+		val[i++] = (*iter);
+	  }
+  }
+  std::string str() {
+	std::stringstream ss;
+	ss << "[";
+	for (int i=0;i<4;i++) {
+		if (i>0) ss << ",";
+		ss << val[i];
+	}
+	ss << "]";
+	return ss.str();
+  }  
+};
+
+// ƒZƒ“ƒT’l
 class SensorValue {
 public:
   DateTime dt;
-  uint8_t v01[4];
-  int16_t v16[4];
+  Values v01; // TODO:packing
+  Values v16;
 
-  void setv01(int n, uint8_t c) { v01[n] = c; }
-  void setv16(int n, int16_t s) { v16[n] = s; }
-  uint8_t getv01(int n) const { return v01[n]; }
-  int16_t getv16(int n) const { return v16[n]; }
+  void setv01(int n, uint8_t v) { v01.setval(n,(int16_t)v); }
+  void setv16(int n, int16_t v) { v16.setval(n,v); }
+  uint8_t getv01(int n) const { return (uint8_t)v01.getval(n); }
+  int16_t getv16(int n) const { return v16.getval(n); }
 
   DateTime getDT() const { return dt; }
   Date getDate() const { return dt.d; }
@@ -200,31 +237,32 @@ public:
 
   SensorValue() {}
   SensorValue(DateTime dt0) : dt(dt0) {}
-  SensorValue(uint8_t *a01, uint16_t *a16) {
-    for (int i=0;i<4;i++) {
-      v01[i] = a01[i]; v16[i] = a16[i];
+  SensorValue(int16_t v) : v01(Values(v)), v16(Values(v)) {}
+  SensorValue(Values x01, Values x16) : v01(x01), v16(x16) {}
+  SensorValue(uint8_t *a01, int16_t *a16) {
+    for (int i=0;i<NSENSOR;i++) {
+      v01.setval(i, (int16_t)a01[i]); 
+	  v16.setval(i,a16[i]);
     }
   }
   friend operator==(SensorValue& x1, SensorValue& x2) {
-	  return 
-			(memcmp(&x1.v01,&x2.v01,4*sizeof(uint8_t)) ==0) &&
-			(memcmp(&x1.v01,&x2.v01,4*sizeof(uint16_t))==0) ;
+	  return (x1.v01 == x2.v01) && (x1.v16 == x2.v16);
   }
   friend operator!=(SensorValue& x1, SensorValue& x2) { return !(x1==x2); }
   std::string str() {
 	std::stringstream ss;
-	ss << "SV[" ;
+	ss << "SV(" ;
 	ss << "dt=" << dt.str() << "," ;
-	ss << "v01=" << v01 << ",";
-	ss << "v16=" << v16 ;
-	ss << "]";
+	ss << "v01=" << v01.str() << ",";
+	ss << "v16=" << v16.str() ;
+	ss << ")";
 	return ss.str();
   }
 };
 
 typedef Array<SensorValue> SensorValueArray;
 
-// å…¥åŠ›:ã‚«ã‚¦ãƒ³ã‚¿
+// “ü—Í:ƒJƒEƒ“ƒ^
 class Counter {
 public:
   uint16_t preset;
@@ -246,7 +284,7 @@ public:
 
 typedef Array<Counter> CounterArray;
 
-// å…¥åŠ›ãƒ»å‡ºåŠ›å…±æœ‰
+// “ü—ÍEo—Í‹¤—L
 typedef SensorValue RawValue;
 
 typedef Array<RawValue> RawValueArray;
@@ -275,9 +313,9 @@ typedef Array<Collection> CollectionArray;
 
 class Condition {
 public:
-  Sensor no;  // ç•ªå·
-  int16_t arg; // å€¤
-  int op;  // >(1), =(2), <(3) ã®ã©ã‚Œã‹
+  Sensor no;  // ”Ô†
+  int16_t arg; // ’l
+  int op;  // >(1), =(2), <(3) ‚Ì‚Ç‚ê‚©
 
   Condition() {}
   Condition(int n, int a, int o=0): no(n),arg(a),op(o) {}
@@ -299,7 +337,7 @@ public:
 class Action : public Condition {
 public:
   Action() {}
-  Action(int n, int a): Condition(n,a,0) {} //opã¯ä½¿ç”¨ã›ãš
+  Action(int n, int a): Condition(n,a,0) {} //op‚Íg—p‚¹‚¸
   friend bool operator==(Action& a1, Action& a2) {
     return (a1.no == a2.no) && (a1.arg == a2.arg) ;
   }
@@ -336,9 +374,8 @@ public:
 };
 
 class WarnValue {
-private:
-  Warn *warn;
 public:
+  Warn *warn;
   Condition cond;
   Action act;
 
@@ -350,7 +387,8 @@ public:
 	cond(Condition(sn,sv)), act(Action(an,av)) {}
   std::string str() {
 	std::stringstream ss;
-	ss << cond.str() << " " << act.str();
+	ss << "(" << cond.no.str() << "," << cond.arg << ")-";
+	ss << "(" << act.no.str() << "," << act.arg << ")" ;
 	return ss.str();
   }
 };
@@ -361,7 +399,7 @@ typedef SensorValue CollectedValue;
 
 typedef Array<CollectedValue> CollectedValueArray;
 
-// åé›†é–“éš”ã®å¤‰åŒ–è¨˜éŒ²
+// ûWŠÔŠu‚Ì•Ï‰»‹L˜^
 class CollectedHistory {
 public:
   DateTime dt;
@@ -371,12 +409,18 @@ public:
   Time getTime() const { return dt.t; }
 
   CollectedHistory() : ary(0) {}
-  CollectedHistory(DateTime dt0) : dt(dt0), ary(0) {}
+  CollectedHistory(DateTime dt0, CollectionArray *a=0) : dt(dt0), ary(a) {}
+  std::string str() {
+	std::stringstream ss;
+	ss << "CH(" << dt.str() << " ";
+	ss << ((ary)?ary->str():"[]") << ")";
+	return ss.str();
+  }
 };
 
 typedef Array<CollectedHistory> CollectedHistoryArray;
 
-// å‡ºåŠ›ãƒ»å¿œç­”å…±æœ‰ : 1æ™‚é–“æ¯ã«ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›
+// o—ÍE‰“š‹¤—L : 1ŠÔ–ˆ‚Éƒtƒ@ƒCƒ‹o—Í
 
 class CollectedStore {
 private:
@@ -389,9 +433,17 @@ public:
   CollectedStore(
 	CollectedValueArray *va0, CollectedHistoryArray *ha0
 	) : va(va0), ha(ha0) {}
+  std::string str(bool nl=false) {
+	std::stringstream ss;
+	ss << "CS(" ;
+	ss << ((va)?va->str(nl):"[]") << std::endl;
+	ss << ((ha)?ha->str(nl):"[]") << std::endl;
+	ss << ")";
+	return ss.str();
+  }
 };
 
-// ãƒ“ãƒƒãƒˆãƒ™ã‚¯ã‚¿
+// ƒrƒbƒgƒxƒNƒ^
 class BitVector {
 private:
   uint32_t val;
@@ -414,7 +466,7 @@ public:
   }
 };
 
-// å¿œç­”
+// ‰“š
 class CheckedRequest {
 private:
   static const uint32_t mask[];
@@ -422,8 +474,8 @@ public:
   DateTime begin;
   DateTime end;
   uint32_t interval; // sec
-  BitVector vec16; // åé›†ã™ã‚‹ã‚»ãƒ³ã‚µç•ªå·ã®ãƒ“ãƒƒãƒˆãƒ™ã‚¯ã‚¿
-  BitVector vec01; // åŒä¸Š
+  BitVector vec16; // ûW‚·‚éƒZƒ“ƒT”Ô†‚ÌƒrƒbƒgƒxƒNƒ^
+  BitVector vec01; // “¯ã
 
   void setvec16(int k)   {vec16.set(k); }
   void setvec01(int k)   {vec01.set(k); }
@@ -433,12 +485,26 @@ public:
   CheckedRequest() {}
   CheckedRequest(DateTime &b,DateTime &e,uint32_t v) :
 	begin(b), end(e), interval(v) {}
+  std::string str() {
+	std::stringstream ss;
+	ss << "CR(" ;
+	ss << begin.str() << " " << end.str() << " " << interval << " ";
+	ss << vec01.str() << " " << vec16.str() << ")";
+ 	return ss.str();
+  }  
 };
 
 class FilteredCollectedStore {
-private:
-  CollectedStore *value;
-  std::string message;
 public:
-  FilteredCollectedStore() : value(0),message("") {}
+  std::string message;
+  CollectedStore *value;
+  
+  FilteredCollectedStore(std::string m="",CollectedStore *v=0) 
+	: message(m),value(v) {}
+  std::string str(bool nl=false) {
+	std::stringstream ss;
+	ss << "m=" << "%" << message << "% ";
+	ss << "v=" << ((value)?(value->str(nl)):"null");
+	return ss.str();
+  }  
 };

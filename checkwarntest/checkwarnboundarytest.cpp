@@ -18,9 +18,9 @@ static Warn inwarn003(&cond03,&act);
 // 要素0は使用せず
 static Warn*      inwarnTbl2[]  = { 0, &inwarn001, &inwarn002, &inwarn003 };
 static uint8_t  a01[] = { 0, 0, 0, 0};
-static uint16_t a16_01[] = { 2999, 0, 0, 0 };
-static uint16_t a16_02[] = { 3000, 0, 0, 0 };
-static uint16_t a16_03[] = { 3001, 0, 0, 0 };
+static int16_t a16_01[] = { 2999, 0, 0, 0 };
+static int16_t a16_02[] = { 3000, 0, 0, 0 };
+static int16_t a16_03[] = { 3001, 0, 0, 0 };
 
 static RawValue invalue01(a01, a16_01);
 static RawValue invalue02(a01, a16_02);
@@ -36,7 +36,7 @@ static int      results002[] = { 0,          0,    errnoEQ,          0 };
 static RawValue *values003[] = { 0, &invalue01, &invalue02, &invalue03 };
 static int      results003[] = { 0,    errnoLT,          0,          0 };
 
-// 2次元の表
+// 2次允E�E表
 static RawValue** invalueTbl2[] = { 0, values001,  values002,  values003  };
 static int*	      resultsTbl2[] = { 0, results001, results002, results003 };
 

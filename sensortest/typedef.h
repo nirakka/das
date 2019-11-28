@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include <iomanip>
 
 #include <cstring>
@@ -107,7 +107,7 @@ public:
   }
 };
 
-// ã‚»ãƒ³ã‚µç•ªå·
+// ƒZƒ“ƒT”Ô†
 #define X(n) (0x0000|(n))
 #define Y(n) (0x4000|(n))
 #define A(n) (0x8000|(n))
@@ -168,11 +168,12 @@ public:
 	  return true;
   }
   friend bool operator!=(Array& a1,Array &a2) { return !(a1==a2); }
-  std::string str() {
+  std::string str(bool nl=false) {
 	std::stringstream ss;
 	ss << "[" ;
 	for (int i=0;i<size;i++) {
 		if (i>0) ss<<",";
+		if (nl) ss << std::endl;
 		ss << value[i].str();
 	}
 	ss << "]";
@@ -218,7 +219,7 @@ public:
   }  
 };
 
-// ã‚»ãƒ³ã‚µå€¤
+// ƒZƒ“ƒT’l
 class SensorValue {
 public:
   DateTime dt;
@@ -261,7 +262,7 @@ public:
 
 typedef Array<SensorValue> SensorValueArray;
 
-// å…¥åŠ›:ã‚«ã‚¦ãƒ³ã‚¿
+// “ü—Í:ƒJƒEƒ“ƒ^
 class Counter {
 public:
   uint16_t preset;
@@ -283,7 +284,7 @@ public:
 
 typedef Array<Counter> CounterArray;
 
-// å…¥åŠ›ãƒ»å‡ºåŠ›å…±æœ‰
+// “ü—ÍEo—Í‹¤—L
 typedef SensorValue RawValue;
 
 typedef Array<RawValue> RawValueArray;
@@ -312,9 +313,9 @@ typedef Array<Collection> CollectionArray;
 
 class Condition {
 public:
-  Sensor no;  // ç•ªå·
-  int16_t arg; // å€¤
-  int op;  // >(1), =(2), <(3) ã®ã©ã‚Œã‹
+  Sensor no;  // ”Ô†
+  int16_t arg; // ’l
+  int op;  // >(1), =(2), <(3) ‚Ì‚Ç‚ê‚©
 
   Condition() {}
   Condition(int n, int a, int o=0): no(n),arg(a),op(o) {}
@@ -336,7 +337,7 @@ public:
 class Action : public Condition {
 public:
   Action() {}
-  Action(int n, int a): Condition(n,a,0) {} //opã¯ä½¿ç”¨ã›ãš
+  Action(int n, int a): Condition(n,a,0) {} //op‚Íg—p‚¹‚¸
   friend bool operator==(Action& a1, Action& a2) {
     return (a1.no == a2.no) && (a1.arg == a2.arg) ;
   }
@@ -373,9 +374,8 @@ public:
 };
 
 class WarnValue {
-private:
-  Warn *warn;
 public:
+  Warn *warn;
   Condition cond;
   Action act;
 
@@ -387,7 +387,8 @@ public:
 	cond(Condition(sn,sv)), act(Action(an,av)) {}
   std::string str() {
 	std::stringstream ss;
-	ss << cond.str() << " " << act.str();
+	ss << "(" << cond.no.str() << "," << cond.arg << ")-";
+	ss << "(" << act.no.str() << "," << act.arg << ")" ;
 	return ss.str();
   }
 };
@@ -398,7 +399,7 @@ typedef SensorValue CollectedValue;
 
 typedef Array<CollectedValue> CollectedValueArray;
 
-// åé›†é–“éš”ã®å¤‰åŒ–è¨˜éŒ²
+// ûWŠÔŠu‚Ì•Ï‰»‹L˜^
 class CollectedHistory {
 public:
   DateTime dt;
@@ -408,12 +409,18 @@ public:
   Time getTime() const { return dt.t; }
 
   CollectedHistory() : ary(0) {}
-  CollectedHistory(DateTime dt0) : dt(dt0), ary(0) {}
+  CollectedHistory(DateTime dt0, CollectionArray *a=0) : dt(dt0), ary(a) {}
+  std::string str() {
+	std::stringstream ss;
+	ss << "CH(" << dt.str() << " ";
+	ss << ((ary)?ary->str():"[]") << ")";
+	return ss.str();
+  }
 };
 
 typedef Array<CollectedHistory> CollectedHistoryArray;
 
-// å‡ºåŠ›ãƒ»å¿œç­”å…±æœ‰ : 1æ™‚é–“æ¯ã«ãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›
+// o—ÍE‰“š‹¤—L : 1ŠÔ–ˆ‚Éƒtƒ@ƒCƒ‹o—Í
 
 class CollectedStore {
 private:
@@ -426,9 +433,17 @@ public:
   CollectedStore(
 	CollectedValueArray *va0, CollectedHistoryArray *ha0
 	) : va(va0), ha(ha0) {}
+  std::string str(bool nl=false) {
+	std::stringstream ss;
+	ss << "CS(" ;
+	ss << ((va)?va->str(nl):"[]") << std::endl;
+	ss << ((ha)?ha->str(nl):"[]") << std::endl;
+	ss << ")";
+	return ss.str();
+  }
 };
 
-// ãƒ“ãƒƒãƒˆãƒ™ã‚¯ã‚¿
+// ƒrƒbƒgƒxƒNƒ^
 class BitVector {
 private:
   uint32_t val;
@@ -451,7 +466,7 @@ public:
   }
 };
 
-// å¿œç­”
+// ‰“š
 class CheckedRequest {
 private:
   static const uint32_t mask[];
@@ -459,8 +474,8 @@ public:
   DateTime begin;
   DateTime end;
   uint32_t interval; // sec
-  BitVector vec16; // åé›†ã™ã‚‹ã‚»ãƒ³ã‚µç•ªå·ã®ãƒ“ãƒƒãƒˆãƒ™ã‚¯ã‚¿
-  BitVector vec01; // åŒä¸Š
+  BitVector vec16; // ûW‚·‚éƒZƒ“ƒT”Ô†‚ÌƒrƒbƒgƒxƒNƒ^
+  BitVector vec01; // “¯ã
 
   void setvec16(int k)   {vec16.set(k); }
   void setvec01(int k)   {vec01.set(k); }
@@ -470,12 +485,26 @@ public:
   CheckedRequest() {}
   CheckedRequest(DateTime &b,DateTime &e,uint32_t v) :
 	begin(b), end(e), interval(v) {}
+  std::string str() {
+	std::stringstream ss;
+	ss << "CR(" ;
+	ss << begin.str() << " " << end.str() << " " << interval << " ";
+	ss << vec01.str() << " " << vec16.str() << ")";
+ 	return ss.str();
+  }  
 };
 
 class FilteredCollectedStore {
-private:
-  CollectedStore *value;
-  std::string message;
 public:
-  FilteredCollectedStore() : value(0),message("") {}
+  std::string message;
+  CollectedStore *value;
+  
+  FilteredCollectedStore(std::string m="",CollectedStore *v=0) 
+	: message(m),value(v) {}
+  std::string str(bool nl=false) {
+	std::stringstream ss;
+	ss << "m=" << "%" << message << "% ";
+	ss << "v=" << ((value)?(value->str(nl)):"null");
+	return ss.str();
+  }  
 };

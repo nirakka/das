@@ -1,16 +1,17 @@
-ï»¿#include <iostream>
+#include <iostream>
 
 #include "counter.h"
 
-// æš«å®š
-// return 1 => currentãŒ0ãªã®ã§ã‚’presetã«æ›´æ–°
-// return 0 => countdownã ã‘è¡Œã†,
-//             currentã®å€¤ãŒãŠã‹ã—ã‘ã‚Œã°presetã®å€¤ã‚’å…¥ã‚Œã‚‹
-// return -1=> presetãŒ0ãªã®ã§ä½•ã‚‚ã—ãªã„
+// Žb’è
+// return 1 => current‚ª0‚È‚Ì‚Å‚ðpreset‚ÉXV
+// return 0 => countdown‚¾‚¯s‚¤,
+//             current‚Ì’l‚ª‚¨‚©‚µ‚¯‚ê‚Îpreset‚Ì’l‚ð“ü‚ê‚é
+// return -1=> preset‚ª0‚Ìê‡current‚à0‚É‚·‚é
 int countdown(Counter& c)
 {
 
 	if (c.preset == 0){
+		c.current = 0;
 		return -1;
 	}
 
@@ -24,15 +25,17 @@ int countdown(Counter& c)
 	return (f3)?1:0;
 }
 
-// result 0 => ã©ã£ã¡ã‚‚caå†…ã®å€¤ãŒã™ã¹ã¦1ä»¥å¤–
-// result 1 => ä¸€ã¤ç›®ã®ã‚»ãƒ³ã‚µã®currentãŒ1
-// result 2 => äºŒã¤ç›®ã®ã‚»ãƒ³ã‚µã®currentãŒ1
-// result 3 => ä¸¡æ–¹ã®ã‚»ãƒ³ã‚µã®currentãŒ1
+static int mask[] = {1, 2, 4, 8, 16, 32, 64, 128};
+
+// result 0 => ‚Ç‚Á‚¿‚àca“à‚Ì’l‚ª‚·‚×‚Ä1ˆÈŠO
+// result 1 => ˆê‚Â–Ú‚ÌƒZƒ“ƒT‚Ìcurrent‚ª1
+// result 2 => “ñ‚Â–Ú‚ÌƒZƒ“ƒT‚Ìcurrent‚ª1
+// result 3 => —¼•û‚ÌƒZƒ“ƒT‚Ìcurrent‚ª1
 int countdownarray(CounterArray& ca)
 {
 	int result = 0;
-	if (countdown(ca[0])==1) result |= 1;
-	if (countdown(ca[1])==1) result |= 2;
-
+	for (int i=0;i<4;i++){
+		if (countdown(ca[i])==1) result |= mask[i];
+	}
 	return result;
 }

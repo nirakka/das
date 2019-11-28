@@ -1,4 +1,4 @@
-ï»¿#include <iostream>
+#include <iostream>
 #include <sstream>
 
 #include "checkwarn.h"
@@ -15,12 +15,12 @@ static Warn inwarn01(&cond01,&act);
 static Warn inwarn02(&cond02,&act);
 static Warn inwarn03(&cond03,&act);
 
-// è¦ç´ 0ã¯ä½¿ç”¨ã›ãš
+// —v‘f0‚Íg—p‚¹‚¸
 static Warn*      inwarnTbl[]  = { 0, &inwarn01, &inwarn02, &inwarn03 };
 static uint8_t  a01[] = { 0, 0, 0, 0};
-static uint16_t a16_01[] = { 2500, 0, 0, 0 };
-static uint16_t a16_02[] = { 3000, 0, 0, 0 };
-static uint16_t a16_03[] = { 3500, 0, 0, 0 };
+static int16_t a16_01[] = { 2500, 0, 0, 0 };
+static int16_t a16_02[] = { 3000, 0, 0, 0 };
+static int16_t a16_03[] = { 3500, 0, 0, 0 };
 
 static RawValue invalue01(a01, a16_01);
 static RawValue invalue02(a01, a16_02);
@@ -35,7 +35,7 @@ static int      results02[] = { 0,          0,    errnoEQ,          0 };
 static RawValue *values03[] = { 0, &invalue01, &invalue02, &invalue03 };
 static int      results03[] = { 0,    errnoLT,          0,          0 };
 
-// 2æ¬¡å…ƒã®è¡¨
+// 2ŸŒ³‚Ì•\
 static RawValue** invalueTbl[] = { 0, values01,  values02,  values03  };
 static int*	      resultsTbl[] = { 0, results01, results02, results03 };
 

@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 
 #include "typedef.h"
 #include "counter.h"
@@ -17,7 +17,7 @@ void countertest :: tearDown (void)
 }
 
 static Counter inputs[]  = { Counter(0,0), Counter(10, 1), Counter(10,3), Counter(0,3)};
-static Counter outputs[] = { Counter(0,0), Counter(10,10), Counter(10,2), Counter(0,3)};
+static Counter outputs[] = { Counter(0,0), Counter(10,10), Counter(10,2), Counter(0,0)};
 static int     results[] = {            0,              1,             0,          -1};
 
 void countertest :: test01 (void)
