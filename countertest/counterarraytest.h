@@ -14,6 +14,10 @@ class counterarraytest : public CPPUNIT_NS :: TestFixture
 	CPPUNIT_TEST (test04);
 	CPPUNIT_TEST (test05);
 	CPPUNIT_TEST (test06);
+	CPPUNIT_TEST (test07);
+	CPPUNIT_TEST (test08);
+	CPPUNIT_TEST (test09);
+	CPPUNIT_TEST (test10);
 	CPPUNIT_TEST_SUITE_END ();
 
 	public:
@@ -27,6 +31,10 @@ class counterarraytest : public CPPUNIT_NS :: TestFixture
 		void test04 (void);
 		void test05 (void);
 		void test06 (void);
+		void test07 (void);
+		void test08 (void);
+		void test09 (void);
+		void test10 (void);
 	private:
 	// add private values
 };

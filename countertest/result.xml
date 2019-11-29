@@ -21,9 +21,21 @@
     <Test id="6">
       <Name>counterarraytest::test06</Name>
     </Test>
+    <Test id="7">
+      <Name>counterarraytest::test07</Name>
+    </Test>
+    <Test id="8">
+      <Name>counterarraytest::test08</Name>
+    </Test>
+    <Test id="9">
+      <Name>counterarraytest::test09</Name>
+    </Test>
+    <Test id="10">
+      <Name>counterarraytest::test10</Name>
+    </Test>
   </SuccessfulTests>
   <Statistics>
-    <Tests>6</Tests>
+    <Tests>10</Tests>
     <FailuresTotal>0</FailuresTotal>
     <Errors>0</Errors>
     <Failures>0</Failures>
