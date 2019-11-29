@@ -3,12 +3,12 @@
 
 #include "readSensorValue.h"
 
-// センサbの読み取りが要求されてぁE��ばT(b=0..7)
+// センサbの読み取りが要求されていればTrue(b=0..7)
 inline bool required(uint8_t setting, int b){
 	return setting & (1<<b);
 }
 
-//使ぁE��
+//使い方
 //
 int readSensorValue(uint8_t settings,
 	Values v01, Values v16, RawValue& rv){
