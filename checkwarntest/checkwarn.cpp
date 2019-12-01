@@ -8,7 +8,7 @@ inline int checkArg(bool f, int r)
 	return (f) ? r : 0;
 }
 
-// g‚¢•û
+// ä½¿ã„æ–¹
 // errno = checkwarn(...);
 // result = writeWarn(errno,...);
 int checkwarn(const Warn& inwarn, const RawValue& invalue)
@@ -28,7 +28,7 @@ int checkwarn(const Warn& inwarn, const RawValue& invalue)
 
 std::string messages[] = {"a","b","c"};
 
-// g‚¢•û
+// ä½¿ã„æ–¹
 //
 int writeWarn(int errno, const RawValue& invalue, WarnValueArray& outvaluearray)
 {
@@ -41,7 +41,7 @@ int writeWarn(int errno, const RawValue& invalue, WarnValueArray& outvaluearray)
 		//outvalue.message = str;
 		//(int sn,int sv,int an,int av)
 	} else {
-//		outvalue‚ğ¶¬
+//		outvalueã‚’ç”Ÿæˆ
 		//cout << "" << endl;
 	}
 	return 0;

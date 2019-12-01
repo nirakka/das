@@ -36,7 +36,7 @@ static int      results002[] = { 0,          0,    errnoEQ,          0 };
 static RawValue *values003[] = { 0, &invalue01, &invalue02, &invalue03 };
 static int      results003[] = { 0,    errnoLT,          0,          0 };
 
-// 2次允E�E表
+// 2次元の表
 static RawValue** invalueTbl2[] = { 0, values001,  values002,  values003  };
 static int*	      resultsTbl2[] = { 0, results001, results002, results003 };
 
